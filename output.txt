@@ -1,0 +1,474 @@
+==========================================================
+================= TEST COVERAGE ==========================
+==========================================================
+
+=============== ADD STUDENT TEST CASE ===============
+
+1. Add Student
+2. Remove Student
+3. Search Student
+4. Display Students
+5. Student Count
+6. Add Course
+7. Exit
+Enter a choice: 1
+Enter ID: 87300
+Enter Name: Hasib Thayattuchira
+Enter GPA: 3.5
+1. Add Student
+2. Remove Student
+3. Search Student
+4. Display Students
+5. Student Count
+6. Add Course
+7. Exit
+Enter a choice: 1
+Enter ID: 87301
+Enter Name: John Doe
+Enter GPA: 3.0
+
+=============== CHECK NO COURSE TEST CASE ===============
+
+1. Add Student
+2. Remove Student
+3. Search Student
+4. Display Students
+5. Student Count
+6. Add Course
+7. Exit
+Enter a choice: 4
+87300 Hasib Thayattuchira 3.5
+No courses to show.
+
+=============== ADD COURSE TEST CASE ===============
+
+1. Add Student
+2. Remove Student
+3. Search Student
+4. Display Students
+5. Student Count
+6. Add Course
+7. Exit
+Enter a choice: 6
+To enter course, enter ID: 87300
+Enter course name: CS20
+Enter location: L2100
+1. Add Student
+2. Remove Student
+3. Search Student
+4. Display Students
+5. Student Count
+6. Add Course
+7. Exit
+Enter a choice: 6
+To enter course, enter ID: 87301
+Enter course name: CS1
+Enter location: L2100
+
+=============== TOTAL STUDENTS TEST CASE ===============
+
+1. Add Student
+2. Remove Student
+3. Search Student
+4. Display Students
+5. Student Count
+6. Add Course
+7. Exit
+Enter a choice: 5
+Total students: 2
+
+=============== DISPLAY STUDENTS TEST CASE ===============
+
+1. Add Student
+2. Remove Student
+3. Search Student
+4. Display Students
+5. Student Count
+6. Add Course
+7. Exit
+Enter a choice: 4
+87300 Hasib Thayattuchira 3.5
+CS20 L2100
+87301 John Doe 3
+CS1 L2100
+
+=============== SEARCH STUDENT TEST CASE ===============
+
+1. Add Student
+2. Remove Student
+3. Search Student
+4. Display Students
+5. Student Count
+6. Add Course
+7. Exit
+Enter a choice: 3
+To search, enter ID: 87300
+Found: 87300 Hasib Thayattuchira 3.5
+CS20 L2100
+1. Add Student
+2. Remove Student
+3. Search Student
+4. Display Students
+5. Student Count
+6. Add Course
+7. Exit
+Enter a choice: 3
+To search, enter ID: 87301
+Found: 87301 John Doe 3
+CS1 L2100
+
+=============== DELETE STUDENT TEST CASE ===============
+
+1. Add Student
+2. Remove Student
+3. Search Student
+4. Display Students
+5. Student Count
+6. Add Course
+7. Exit
+Enter a choice: 2
+To delete, enter ID: 87300
+Deleted student, 87300
+1. Add Student
+2. Remove Student
+3. Search Student
+4. Display Students
+5. Student Count
+6. Add Course
+7. Exit
+Enter a choice: 4
+87301 John Doe 3
+CS1 L2100
+1. Add Student
+2. Remove Student
+3. Search Student
+4. Display Students
+5. Student Count
+6. Add Course
+7. Exit
+Enter a choice: 5
+Total students: 1
+
+=============== WRONG ID TEST CASE ===============
+
+1. Add Student
+2. Remove Student
+3. Search Student
+4. Display Students
+5. Student Count
+6. Add Course
+7. Exit
+Enter a choice: 2
+To delete, enter ID: 87302
+Student does not exist
+1. Add Student
+2. Remove Student
+3. Search Student
+4. Display Students
+5. Student Count
+6. Add Course
+7. Exit
+Enter a choice: 3
+To search, enter ID: 87303
+Student does not exist.
+1. Add Student
+2. Remove Student
+3. Search Student
+4. Display Students
+5. Student Count
+6. Add Course
+7. Exit
+Enter a choice: 6
+To enter course, enter ID: 87305
+Student does not exist.
+
+
+
+==========================================================
+=============== CHATGPT COMPARISON =======================
+==========================================================
+
+CHATGPT'S CODE:
+
+----------------------------------------------------------------------------------------------------
+
+Course.hpp
+#ifndef COURSE_HPP
+#define COURSE_HPP
+
+#include <string>
+
+class Course {
+public:
+    std::string title;
+    std::string room;
+
+    Course();
+    Course(const std::string& title, const std::string& room);
+};
+
+#endif
+
+----------------------------------------------------------------------------------------------------
+
+Course.cpp
+
+Course.COURSE_HPP
+#include "Course.hpp"
+
+// default constructor
+Course::Course() : title(""), room("") {}
+
+// parameterized constructor
+Course::Course(const std::string& title, const std::string& room) {
+    this->title = title;
+    this->room = room;
+}
+
+----------------------------------------------------------------------------------------------------
+
+Student.hpp
+#ifndef STUDENT_HPP
+#define STUDENT_HPP
+
+#include <string>
+#include <vector>
+#include "Course.hpp"
+
+class Student {
+public:
+    int studentId;
+    std::string fullName;
+    double gradePointAverage;
+
+    Student* nextStudent; // linked list pointer for students
+
+    Student();
+    Student(int studentId, const std::string& fullName, double gpa);
+    ~Student();
+
+    void enrollInCourse(const std::string& title, const std::string& room);
+    void listCourses() const;
+
+private:
+    std::vector<Course> courses;
+};
+
+#endif
+
+----------------------------------------------------------------------------------------------------
+
+Student.cpp
+#include "Student.hpp"
+#include <iostream>
+
+// default constructor
+Student::Student() : studentId(0), fullName(""), gradePointAverage(0.0), nextStudent(nullptr) {}
+
+// parameterized constructor
+Student::Student(int studentId, const std::string& fullName, double gpa) {
+    this->studentId = studentId;
+    this->fullName = fullName;
+    this->gradePointAverage = gpa;
+    this->nextStudent = nullptr;
+}
+
+// destructor
+Student::~Student() {
+    // no need to manually delete courses since vector manages memory
+}
+
+// add course
+void Student::enrollInCourse(const std::string& title, const std::string& room) {
+    Course newCourse(title, room);
+    courses.push_back(newCourse);
+}
+
+// display courses
+void Student::listCourses() const {
+    if (courses.empty()) {
+        std::cout << "No enrolled courses." << std::endl;
+        return;
+    }
+    for (const auto& course : courses) {
+        std::cout << "- " << course.title << " (" << course.room << ")" << std::endl;
+    }
+}
+
+----------------------------------------------------------------------------------------------------
+
+driver.cpp
+#include <iostream>
+#include <string>
+#include "Student.hpp"
+#include "Course.hpp"
+
+using namespace std;
+
+Student* studentHead = nullptr;
+
+// prototypes
+void addStudent(int id, const string& name, double gpa);
+void removeStudent(int id);
+void showStudents();
+Student* searchStudent(int id);
+int studentCount();
+
+int main() {
+    int option;
+
+    do {
+        cout << "\n--- Student Menu ---\n";
+        cout << "1. Add Student\n";
+        cout << "2. Remove Student\n";
+        cout << "3. Search Student\n";
+        cout << "4. Display All Students\n";
+        cout << "5. Count Students\n";
+        cout << "6. Add Course to Student\n";
+        cout << "7. Exit\n";
+        cout << "Choose: ";
+        cin >> option;
+
+        if (option == 1) {
+            int id; string name; double gpa;
+            cout << "ID: "; cin >> id;
+            cin.ignore();
+            cout << "Name: "; getline(cin, name);
+            cout << "GPA: "; cin >> gpa;
+            addStudent(id, name, gpa);
+        }
+        else if (option == 2) {
+            int id;
+            cout << "ID to remove: "; cin >> id;
+            removeStudent(id);
+        }
+        else if (option == 3) {
+            int id;
+            cout << "Search by ID: "; cin >> id;
+            Student* found = searchStudent(id);
+            if (found) {
+                cout << "Found: " << found->studentId << " " << found->fullName
+                     << " GPA: " << found->gradePointAverage << endl;
+                found->listCourses();
+            } else {
+                cout << "Student not found." << endl;
+            }
+        }
+        else if (option == 4) {
+            showStudents();
+        }
+        else if (option == 5) {
+            cout << "Total students: " << studentCount() << endl;
+        }
+        else if (option == 6) {
+            int id; string courseTitle, courseRoom;
+            cout << "Student ID: "; cin >> id;
+            cin.ignore();
+            Student* found = searchStudent(id);
+            if (found) {
+                cout << "Course title: "; getline(cin, courseTitle);
+                cout << "Course room: "; getline(cin, courseRoom);
+                found->enrollInCourse(courseTitle, courseRoom);
+            } else {
+                cout << "Student not found." << endl;
+            }
+        }
+    } while (option != 7);
+
+    // cleanup linked list
+    while (studentHead) {
+        Student* temp = studentHead;
+        studentHead = studentHead->nextStudent;
+        delete temp;
+    }
+
+    return 0;
+}
+
+// helper functions
+void addStudent(int id, const string& name, double gpa) {
+    Student* newStu = new Student(id, name, gpa);
+    newStu->nextStudent = nullptr;
+
+    if (!studentHead) {
+        studentHead = newStu;
+    } else {
+        Student* temp = studentHead;
+        while (temp->nextStudent) {
+            temp = temp->nextStudent;
+        }
+        temp->nextStudent = newStu;
+    }
+}
+
+void removeStudent(int id) {
+    if (!studentHead) return;
+
+    if (studentHead->studentId == id) {
+        Student* temp = studentHead;
+        studentHead = studentHead->nextStudent;
+        delete temp;
+        cout << "Student removed.\n";
+        return;
+    }
+
+    Student* curr = studentHead;
+    while (curr->nextStudent && curr->nextStudent->studentId != id) {
+        curr = curr->nextStudent;
+    }
+    if (curr->nextStudent) {
+        Student* toRemove = curr->nextStudent;
+        curr->nextStudent = curr->nextStudent->nextStudent;
+        delete toRemove;
+        cout << "Student removed.\n";
+    } else {
+        cout << "Student not found.\n";
+    }
+}
+
+void showStudents() {
+    if (!studentHead) {
+        cout << "No students available.\n";
+        return;
+    }
+    Student* temp = studentHead;
+    while (temp) {
+        cout << temp->studentId << " " << temp->fullName
+             << " GPA: " << temp->gradePointAverage << endl;
+        temp->listCourses();
+        temp = temp->nextStudent;
+    }
+}
+
+Student* searchStudent(int id) {
+    Student* temp = studentHead;
+    while (temp) {
+        if (temp->studentId == id) return temp;
+        temp = temp->nextStudent;
+    }
+    return nullptr;
+}
+
+int studentCount() {
+    int count = 0;
+    Student* temp = studentHead;
+    while (temp) {
+        count++;
+        temp = temp->nextStudent;
+    }
+    return count;
+}
+
+----------------------------------------------------------------------------------------------------
+
+____Differences:____
+- In general, this is a little more advanced, but slightly similar to my program
+- Kept saying that we should use a vector rather than a Node* linked list for some reason, it probably read the rules
+and thought it wasn't a good idea?
+-  Code for the destructor is a whole lot more simpler, which is surprising. Rather than using a loop, uses a vector to
+manage memory
+- For user readability, they have added dashes and other sorts of methods to allow users to learn what they are using
+- ChatGPT's way of naming methods is a little interesting, probably another user readability feature for those who are new
+to coding. Methods such as enrollInCourse() and listCourses() seems a bit much
+- Variable naming is a whole lot more different, ChatGPT tends to make descriptive variable names while I am simply
+trying to efficinetly write this program; perhaps its for user readability for those who are new to coding
